@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash
 from ValidationService import ValidationService
 from ..Data import User
+from ..Services import DBmgr
 
 class UserCreator:
     def __init__(self, dbmgr: DBmgr):

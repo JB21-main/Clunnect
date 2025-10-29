@@ -5,6 +5,7 @@ from ..Services import SessionManager
 from ..Services import UserCreator
 from ..Data import Level
 from ..Data import User
+from ..Services import DBmgr
 
 class AuthController:
     def __init__(self, dbmgr: DBmgr):
@@ -36,7 +37,7 @@ class AuthController:
         )
         return True, {"token": token, "user":user}
     
-    def register(self, name: str, email: str, password:str, level=Level.MEMBER)
+    def register(self, name: str, email: str, password:str, level=Level.MEMBER):
         user = self.user_creator.create_user(name,email,password,level.value)
 
         token = self.sessions.create_session(user.ID)
@@ -46,5 +47,3 @@ class AuthController:
     def logout(self, token:str):
         self.sessions.destroy_session(token)
         return True
-    
-
