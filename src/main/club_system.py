@@ -1,6 +1,5 @@
 class ClubSystem:
     def __init__(self):
-        # This set acts as our database of existing clubs
         self.existing_clubs = set()
 
     def create_club(self, club_name, club_description):
@@ -18,7 +17,6 @@ class ClubSystem:
             return "Club Name cannot be empty"
 
         # 2. Check if club name already exists.
-        #    THIS IS THE LOGIC THAT WAS MISSING OR IN THE WRONG PLACE
         if club_name in self.existing_clubs:
             return "A club with this name already exists"
 
