@@ -1,7 +1,8 @@
 from werkzeug.security import generate_password_hash
-from ValidationService import ValidationService
-from ..Data import User
-from ..Services import DBmgr
+from Services.ValidationService import ValidationService
+from Data.User import User
+from Data.Level import Level
+from Services.DBmgr import DBmgr
 
 class UserCreator:
     def __init__(self, dbmgr: DBmgr):
@@ -13,7 +14,7 @@ class UserCreator:
         self.db = dbmgr
         self.validator = ValidationService()
 
-    def create_user(self, name: str, email: str, password: str, level: str = 'member'):
+    def create_user(self, name: str, email: str, password: str, level=Level.MEMBER):
         """Creates a user using the given name, email, and password
         
         Args:
@@ -33,5 +34,5 @@ class UserCreator:
 
         result = self.db.insert_user(name, email, password_hash, level)
 
-        user_id = result[0]["id"] if result else None
-        return User(user_id, name, email)
+        user_id = result["id"] if result else None
+        return User(user_id,name,email)

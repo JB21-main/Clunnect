@@ -1,10 +1,9 @@
 import secrets
-from ..Services import DBmgr
+from Services import DBmgr
 
 class SessionManager:
     sessions = {}
 
-    
     def create_session(self, user_id:int) -> str:
         """Creates a session based on the users id
         
@@ -14,7 +13,7 @@ class SessionManager:
         Returns:
             token (str): the token for the session
         """
-        token = secrets.token.hex(16)
+        token = secrets.token_urlsafe(32)
         self.sessions[token] = user_id
         return token
 

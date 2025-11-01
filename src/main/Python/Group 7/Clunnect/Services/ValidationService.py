@@ -1,11 +1,12 @@
 import re
-from ..Data import Club
+from Data import Club
 
 class ValidationService:
     
     min_password_length = 7
 
-    def validation_email(self, email:str) -> bool:
+    @staticmethod
+    def validate_email(email:str) -> bool:
         """Checks if the email follows valid email structure(IE: name@domain.TLD)
         
         Args:
