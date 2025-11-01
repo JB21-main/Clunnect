@@ -15,7 +15,7 @@ def test_boundary_successful_auth(controller):
 def test_boundary_wrong_password(controller):
     result, message = controller.authenticate("txs201100@utdallas.edu", "WrongPassword")
     assert result == False
-    assert message == "An account with that email was not found"
+    assert message == "Incorrect password"
 
 def test_boundary_empty_username(controller):
     result, message = controller.authenticate("", "TestUser1234")
