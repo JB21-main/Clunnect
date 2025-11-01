@@ -37,8 +37,9 @@
 
 ## Contributors:
    "Liam D. Godkin"
-   "Jose Manuel Beltran Gonzales"
+   "Jose Manuel Beltran Gonzalez"
    "Jovita Jijo"
    "Kandhan Rameshkumar"
    "Lohita Nagalakshmi"
    "Taylor Beers"
+   "Mahiyan Rahman"
