@@ -87,4 +87,42 @@ class DBmgr:
         #not yet implemented
         return None
 
+    def get_club(self, club_id: int):
+        """
+        Returns a dict with club fields or None.
+        Expects 'clubs' table with columns: id, name, description, owner_id.
+        """
+        response = self.supabase.table("clubs").select("*").eq("id", club_id).limit(1).execute()
+        if getattr(response, "error", None):
+            raise Exception(response.error.message)
+        if response.data:
+            return response.data[0]
+        return None
+
+    def update_club(self, club_id: int, name: str = None, description: str = None):
+        """
+        Partial update. Pass only the fields you want to change.
+        """
+        updates = {}
+        if name is not None:
+            updates["name"] = name
+        if description is not None:
+            updates["description"] = description
+
+        if not updates:
+            return True  # nothing to do
+
+        response = self.supabase.table("clubs").update(updates).eq("id", club_id).execute()
+        if getattr(response, "error", None):
+            raise Exception(response.error.message)
+        return True
+
+    def delete_club(self, club_id: int):
+        """
+        Hard delete. If you want soft-delete, create a 'deleted_at' column and update instead.
+        """
+        response = self.supabase.table("clubs").delete().eq("id", club_id).execute()
+        if getattr(response, "error", None):
+            raise Exception(response.error.message)
+        return True
 
