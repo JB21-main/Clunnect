@@ -1,6 +1,11 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from Controllers.AuthController import AuthController
 from Controllers.ClubController import ClubController
+from Controllers.SearchController import SearchController       
+from Controllers.AccountController import AccountController
 from Services.DBmgr import DBmgr
 from Services.UserCreator import UserCreator
 
@@ -13,6 +18,8 @@ print("before")
 dbmgr = DBmgr()
 auth_controller = AuthController(dbmgr)
 club_controller = ClubController(dbmgr)
+search_controller = SearchController(dbmgr=dbmgr)    
+account_controller = AccountController(dbmgr=dbmgr) 
 print("after")
 
 @app.route("/")
@@ -104,6 +111,33 @@ def join_club_post(club_id):
         return redirect(url_for('dashboard'))
     except Exception as e:
         return f"Error joining club: {str(e)}", 400
+    
+@app.route('/api/search', methods=['GET'])
+def handle_search():
+    if 'user' not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    search_query = request.args.get('query')
+    
+    results = search_controller.search(search_query)
+    return jsonify(results)
+
+@app.route('/api/update-account', methods=['POST'])
+def handle_account_update():
+    if 'user' not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.json
+    username = data.get('username')
+    new_pass = data.get('password')
+    user_id = session['user']['id'] 
+    
+    success, message = account_controller.change_account_info(
+        username=username,
+        new_pass=new_pass,
+        user_id=user_id
+    )
+    return jsonify({"success": success, "message": message})
 
 if __name__ == "__main__":
     app.run(debug=True)
