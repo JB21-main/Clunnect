@@ -28,18 +28,21 @@ class DBmgr:
         response = self.supabase.table("clubs").select("id").eq("name", club_name).execute()
         return len(response.data) == 0
 
-    def save_club(self, name:str,description:str, owner_id: int):
+    def save_club(self, name: str, description: str, owner_id: int, category: str | None = None,
+    meeting_time: str | None = None):
         club_data = {
             'name': name,
             'description': description,
-            'owner_id': owner_id
-        }
+            'owner_id': owner_id,
+            'category': category,
+            'meeting_time': meeting_time,
+    }
 
         response = self.supabase.table("clubs").insert(club_data).execute()
         if response.data:
             return response.data[0]
         return None
-    
+
     def get_club_list(self):
         response = self.supabase.table("clubs").select("*").execute()
         return response.data if response.data else []

@@ -6,21 +6,35 @@ class ClubController:
         self.db = dbmgr
 
     # ---------- CREATE ----------
-    def create_club(self, name: str, description: str, owner_id: int):
+    def create_club(self, name: str, description: str, category: str,meeting_time: str,
+    owner_id: int):
         if not name or not description:
             return False, "Club name and description cannot be empty"
-        
+
         club = Club(
             club_id=None,
             name=name,
             description=description,
-            owner_id=owner_id
+            owner_id=owner_id,
+            category=category,
+            meeting_time=meeting_time,
         )
+
         try:
-            club.club_id = self.db.save_club(club.name, club.description, club.owner_id)
+            row = self.db.save_club(
+                name=club.name,
+                description=club.description,
+                owner_id=club.owner_id,
+                category=club.category,
+                meeting_time=club.meeting_time,
+            )
+            if row and "id" in row:
+                club.club_id = row["id"]
+
             return True, "Club created successfully."
         except Exception as e:
             return False, f"Error creating club: {str(e)}"
+
 
     # ---------- EDIT / UPDATE ----------
     def edit_club(
