@@ -1,5 +1,6 @@
 import re
 from Data import Club
+from datetime import datetime
 
 class ValidationService:
     
@@ -51,3 +52,24 @@ class ValidationService:
             return False
         
         return True
+    
+    def validate_event_data(self, data: dict):
+        if not data.get("name"):
+            return False, "Invalid name"
+        
+        if not data.get("description"):
+            return False, "Invalid description"
+        
+        if not data.get("category"):
+            return False, "Invalid category"
+
+        try:
+            datetime.strptime(data["date"], "%Y-%m-%d")
+        except ValueError:
+            return False, "Invalid date format. Expected YYYY-MM-DD."
+        try:
+            datetime.strptime(data["time"], "%H:%M")
+        except ValueError:
+            return False, "Invalid time format. Expected HH:MM."
+        
+        return True, "No error"

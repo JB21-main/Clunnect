@@ -4,6 +4,7 @@ load_dotenv()
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from Controllers.AuthController import AuthController
 from Controllers.ClubController import ClubController
+from Controllers.EventController import EventController
 from Controllers.SearchController import SearchController       
 from Controllers.AccountController import AccountController
 from Services.DBmgr import DBmgr
@@ -18,6 +19,7 @@ print("before")
 dbmgr = DBmgr()
 auth_controller = AuthController(dbmgr)
 club_controller = ClubController(dbmgr)
+event_controller = EventController(dbmgr)
 search_controller = SearchController(dbmgr=dbmgr)    
 account_controller = AccountController(dbmgr=dbmgr) 
 print("after")
@@ -39,7 +41,7 @@ def login():
         if result["success"]:
             session['user'] = result["data"]['user']
             flash("Login successful!", "success")
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('homepage'))
         else:
             flash(result.get('error', 'Login failed.'), 'danger')
             return redirect(url_for('login'))
@@ -138,6 +140,62 @@ def handle_account_update():
         user_id=user_id
     )
     return jsonify({"success": success, "message": message})
+
+@app.route('/create_event', methods=['GET','POST'])
+def create_event():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+    
+    owner_id = session['user']['id']
+    clubs = dbmgr.find_club_by_owner(owner_id)
+
+    if request.method == 'POST':
+        name = request.form.get('name')
+        date = request.form.get('time')
+        category = request.form.get('category')
+        description = request.form.get('description')
+        date = request.form.get('date')
+        time =  request.form.get('time')
+        
+        club_id = int(request.form.get('club_id'))
+
+        if not club_id:
+            flash("Please select a club", "danger")
+            return redirect(url_for(create_event))
+
+        event_dict = {
+            "name": name,
+            "description": description,
+            "category": category,
+            "date": date,
+            "time": time
+        }
+
+        success, result = event_controller.create_event(event_dict, club_id, owner_id)
+        
+        if success:
+            flash("Event created successfully!", "success")
+            return redirect(url_for('event_dashboard_user'))
+        else:
+            flash(result, "danger")
+            return redirect(url_for('create_event'))
+        
+    return render_template('create-event.html', user=session['user'], clubs = clubs)
+
+@app.route('/homepage')
+def homepage():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+    return render_template('homepage.html', user=session['user'])
+
+@app.route('/event_dashboard_user')
+def event_dashboard_user():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+    return render_template('event-dashboard-officer.html', user=session['user'])
 
 if __name__ == "__main__":
     app.run(debug=True)

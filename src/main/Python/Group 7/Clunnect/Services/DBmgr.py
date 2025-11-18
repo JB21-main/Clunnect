@@ -129,3 +129,26 @@ class DBmgr:
             raise Exception(response.error.message)
         return True
 
+    def find_club_by_owner(self, owner_id: int):
+        """
+        Find the requesting users owned clubs
+        """
+        response = self.supabase.table("clubs").select("id, name").eq("owner_id", owner_id).execute()
+        return response.data
+    
+    def insert_event(self, name: str, description: str, category: str, date: str, time: str, club_id: int, owner_id: int):
+        event_data = {
+            'name': name,
+            'description': description,
+            'category': category,
+            'date': date,
+            'time': time,
+            'club_id': club_id,
+            'owner_id': owner_id
+    }
+
+        response = self.supabase.table("events").insert(event_data).execute()
+        if response.data:
+            return response.data[0]
+        return None
+

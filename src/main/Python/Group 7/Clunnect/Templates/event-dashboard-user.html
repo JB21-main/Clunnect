@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Create Club – Clunnect</title>
+<title>Event Dashboard – Clunnect</title>
 <style>
   :root{
     --utd-green:#0e4a3f;
@@ -135,7 +135,7 @@
 <body>
 <div class="app">
   <section class="page">
-    <div class="topbar"><div class="brand">Clunnect</div><div class="title">Create Club</div><a class="homeicon" title="Home" href="{{ url_for('homepage') }}" aria-label="Home">
+    <div class="topbar"><div class="brand">Clunnect</div><div class="title">Event Dashboard</div><a class="homeicon" title="Home" href="homepage.html" aria-label="Home">
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M3 10.5L12 3l9 7.5"></path>
     <path d="M5 9.5v11h5v-6h4v6h5v-11"></path>
@@ -143,34 +143,36 @@
 </a></div>
     <div class="content">
       
-  <div class="two-col">
-    <div>
-      <form method="POST" action="{{ url_for('create_club') }}">
-      <label>Club Name</label>
-      <input type="text" name="name" /> <!-- Club Name -->
-      <label style="margin-top:12px;">Club Description</label>
-      <textarea name="description" rows="5"></textarea>
-    
+  <div class="event-wrap">
+    <div class="event-top">
+      <div class="card">
+        <div style="font-weight:700;margin-bottom:6px;">Event Details</div>
+        <div class="small">Description</div>
+        <div class="small">Location</div>
+        <div class="small">Date and Time</div>
+      </div>
+      <div class="card">
+        <div style="font-weight:700;margin-bottom:6px;">Participants</div>
+        <div class="small">User 1</div>
+        <div class="small">User 2</div>
+        <a class="link-inline small">View All…</a>
+      </div>
+    </div>
+    <div class="toolbar">
+      <a class="pill">Share</a>
     </div>
     <div class="card">
-      <div class="center" style="font-weight:700;margin-bottom:8px;">Club Meeting<br/>Times</div>
-      <table style="width:100%;border-collapse:collapse;">
-        <tbody>
-          <tr><td>Monday:</td><td>to:</td></tr>
-          <tr><td>Tuesday:</td><td>to:</td></tr>
-          <tr><td>Wednesday:</td><td>to:</td></tr>
-          <tr><td>Thursday:</td><td>to:</td></tr>
-          <tr><td>Friday:</td><td>to:</td></tr>
-          <tr><td>Saturday:</td><td>to:</td></tr>
-          <tr><td>Sunday:</td><td>to:</td></tr>
-        </tbody>
-      </table>
+      <div class="center" style="font-weight:700;margin-bottom:6px;">Announcements</div>
+      <div class="spacer"></div>
+      <div>Announcement 1 Title</div>
+      <div class="spacer"></div>
+      <div>Announcement 2 Title</div>
+      <div class="spacer"></div>
+      <div>Announcement 3 Title</div>
     </div>
   </div>
-  <div class="wide-cta"><button type="submit" class="cta big-cta">Create Club</button></div>
 
     </div>
-  </form>  
   </section>
 </div>
 </body>

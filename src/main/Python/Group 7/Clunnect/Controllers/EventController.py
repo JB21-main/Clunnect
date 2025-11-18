@@ -52,9 +52,10 @@ class EventController:
             name=form_data["name"],
             description=form_data["description"],
             category=form_data.get("category", ""),
-            club_id=club_id,
             date=form_data["date"],
-            time=form_data["time"]
+            time=form_data["time"],
+            club_id=club_id,
+            owner_id=user_id
         )
 
         if result:
@@ -68,7 +69,7 @@ class EventController:
                 time=form_data["time"]
             )
             event.category = form_data.get("category", "")
-            return event
+            return True, event
         
         return None
 
@@ -217,7 +218,7 @@ class EventController:
         """
         # This would check if user is the club owner or has officer role
         # For now, we'll use a simplified check through DBmgr
-        club = self.db.get_club_by_id(club_id)
+        club = self.db.get_club(club_id)
         if not club:
             return False
         
