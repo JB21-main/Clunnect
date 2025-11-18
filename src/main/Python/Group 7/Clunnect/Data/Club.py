@@ -2,19 +2,27 @@ from typing import List
 from datetime import datetime
 
 class Club:
-    def __init__(self, club_id:int,name: str, description: str, owner_id: int):
+    def __init__(self, club_id: int, name: str, description: str, owner_id: int,
+        category: str | None = None, meeting_time: str | None = None):
+
         self.club_id = club_id
         self.name = name
         self.description = description
         self.owner_id = owner_id
-        self.members: List[int] = [] #stores user_ids
-        self.events: List[int] = [] #stores event_ids
+
+        # new fields
+        self.category = category or ""
+        self.meeting_time = meeting_time or ""
+
+        self.members: List[int] = []  # stores user_ids
+        self.events: List[int] = []   # stores event_ids
 
     def create_club(self, inputData: dict):
-
         self.name = inputData.get("name", "")
         self.category = inputData.get("category", "")
+        self.meeting_time = inputData.get("meeting_time", "")
         self.description = inputData.get("description", "")
+
     
     def join_request(self, user_id: int):
         #to be added later
