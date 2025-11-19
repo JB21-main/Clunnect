@@ -91,22 +91,21 @@ class EventController:
         event = self.db.get_event_by_id(event_id)
         if not event:
             raise ValueError(f"Event with ID {event_id} not found")
-
-        # Validate user has permission
-        if not self._validate_club_permission(user_id, event["club_id"]):
-            raise PermissionError("User does not have permission to edit this event")
-
+        
         # Update event in database
         update_data = {
-            "name": form_data.get("name", event["name"]),
-            "description": form_data.get("description", event["description"]),
-            "category": form_data.get("category", event.get("category", "")),
-            "date": form_data.get("date", event["date"]),
-            "time": form_data.get("time", event["time"])
+            "name": form_data.get("name", event.name),
+            "description": form_data.get("description", event.description),
+            "category": form_data.get("category", getattr(event,"category", "")),
+            "date": form_data.get("date", event.date),
+            "time": form_data.get("time", event.time)
         }
 
         result = self.db.update_event(event_id, update_data)
-        return result is not None
+        if result is not None:
+            return True, result
+        else:
+            return False, None
 
     def delete_event(self, event_id: int, user_id: int) -> bool:
         """Deletes an event.
@@ -127,7 +126,7 @@ class EventController:
             raise ValueError(f"Event with ID {event_id} not found")
 
         # Validate user has permission
-        if not self._validate_club_permission(user_id, event["club_id"]):
+        if not self._validate_club_permission(user_id, event.club_id):
             raise PermissionError("User does not have permission to delete this event")
 
         # Delete event from database

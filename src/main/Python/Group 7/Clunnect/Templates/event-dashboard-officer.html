@@ -135,7 +135,7 @@
 <body>
 <div class="app">
   <section class="page">
-    <div class="topbar accent-top"><div class="brand">Clunnect</div><div class="title">Event Dashboard</div><a class="homeicon" title="Home" href="homepage.html" aria-label="Home">
+    <div class="topbar accent-top"><div class="brand">Clunnect</div><div class="title">Event Dashboard</div><a class="homeicon" title="Home" href="{{ url_for('homepage') }}" aria-label="Home">
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M3 10.5L12 3l9 7.5"></path>
     <path d="M5 9.5v11h5v-6h4v6h5v-11"></path>
@@ -159,8 +159,7 @@
       </div>
     </div>
     <div class="toolbar">
-      <a class="pill">Edit</a>
-      <a class="pill">Delete</a>
+      <a class="pill" href="{{ url_for('edit_event') }}">Edit</a>
       <a class="pill">Share</a>
       <a class="pill" href="{{ url_for('create_event') }}">Create</a>
     </div>

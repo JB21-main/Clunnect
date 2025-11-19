@@ -52,6 +52,7 @@
   .cta{background:var(--utd-orange);border:none;color:#fff;border-radius:4px;height:40px;padding:0 18px;font-weight:700;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.25);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;}
   .cta.secondary{background:#ddd;color:#333;box-shadow:0 2px 0 rgba(0,0,0,.15);}
   .actions-right{display:flex;gap:16px;justify-content:flex-end;margin-top:16px;}
+  .actions-left {display: flex;gap: 16px;justify-content: flex-start;margin-top: 16px;}
   .center{text-align:center;}
 
   /* HOMEPAGE & SEARCH searchbars */
@@ -135,38 +136,57 @@
 <body>
 <div class="app">
   <section class="page">
-    <div class="topbar accent-top"><div class="brand">Clunnect</div><div class="title">Edit Event</div><a class="homeicon" title="Home" href="homepage.html" aria-label="Home">
+    <div class="topbar accent-top"><div class="brand">Clunnect</div><div class="title">Edit Event</div><a class="homeicon" title="Home" href="{{ url_for('homepage') }}" aria-label="Home">
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M3 10.5L12 3l9 7.5"></path>
     <path d="M5 9.5v11h5v-6h4v6h5v-11"></path>
   </svg>
 </a></div>
     <div class="content">
-      
+  <form method="POST" action="{{ url_for('edit_event') }}">
   <div class="form-card">
-    <label>Event Title</label>
-    <input type="text" />
+    <label>Select Event</label>
+      <select name="club_id" required>
+      <option value="">-- Select a Event --</option>
+      {% for club in clubs %}
+      <option value="{{ club.id }}">{{ club.name }}</option>
+      {% endfor %}
+    </select>
+    <div class="row">
+      <label class="flex">Event Title</label>
+      <div class="flex"></div>
+    </div>
+    <input type="text" name="name" />
     <div class="row">
       <div class="flex">
         <label>Date</label>
-        <input type="text" />
+        <input type="date" name="date" />
       </div>
       <div style="width:80px;text-align:center;margin-top:24px;">Time</div>
       <div class="flex">
         <label>&nbsp;</label>
-        <input type="text" />
+        <input type="time" name="time" />
       </div>
     </div>
-    <label>Location</label>
-    <input type="text" />
+    <!-- <label>Location</label>
+    <input type="text" /> -->
     <label>Description</label>
-    <textarea></textarea>
+    <textarea name="description"></textarea>
+    <input type="hidden" name="delete_event" id="delete_event_flag" value="0">
+    <button type="button" class="cta secondary" style="background:red;color:white;"
+        onclick="if(confirm('Are you sure you want to delete this event?')) { 
+            document.getElementById('delete_event_flag').value = '1'; 
+            this.form.submit();
+        }"
+    >
+        Delete Event
+    </button>
     <div class="actions-right">
-      <a class="cta">Save Changes</a>
+      <button type="submit" class="cta">Edit Event</button>
       <a class="cta secondary">Cancel</a>
     </div>
   </div>
-
+  </form>
     </div>
   </section>
 </div>

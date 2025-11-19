@@ -197,5 +197,54 @@ def event_dashboard_user():
         return redirect(url_for('login'))
     return render_template('event-dashboard-officer.html', user=session['user'])
 
+@app.route('/edit_event', methods=['GET','POST'])
+def edit_event():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+    
+    owner_id = session['user']['id']
+    clubs = dbmgr.find_event_by_owner(owner_id)
+
+    if request.method == 'POST':
+        delete_flag = request.form.get('delete_event') == '1'
+        event_id = int(request.form.get('club_id'))
+        if delete_flag:
+            event_controller.delete_event(event_id, owner_id)
+            flash("Event deleted successfully", "success")
+            return redirect(url_for('event_dashboard_user'))
+
+        name = request.form.get('name')
+        date = request.form.get('time')
+        category = request.form.get('category')
+        description = request.form.get('description')
+        date = request.form.get('date')
+        time =  request.form.get('time')
+        
+        event_id = int(request.form.get('club_id'))
+
+        if not event_id:
+            flash("Please select a event", "danger")
+            return redirect(url_for(edit_event))
+
+        event_dict = {
+            "name": name,
+            "description": description,
+            "category": category,
+            "date": date,
+            "time": time
+        }
+
+        success, result = event_controller.edit_event(event_id, event_dict, owner_id)
+        
+        if success:
+            flash("Event created successfully!", "success")
+            return redirect(url_for('event_dashboard_user'))
+        else:
+            flash(result, "danger")
+            return redirect(url_for('edit_event'))
+
+    return render_template("edit-event.html", user=session['user'], clubs = clubs)
+
 if __name__ == "__main__":
     app.run(debug=True)

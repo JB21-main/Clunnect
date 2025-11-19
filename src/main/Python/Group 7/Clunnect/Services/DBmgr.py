@@ -1,5 +1,6 @@
 from typing import List
 from Data import User, Club
+from Data.Event import Event
 from supabase import create_client, Client
 from dotenv import load_dotenv
 from Data.Level import Level
@@ -151,4 +152,66 @@ class DBmgr:
         if response.data:
             return response.data[0]
         return None
+    
+    def find_event_by_owner(self, owner_id: int):
+        """
+        Find the requesting users owned clubs
+        """
+        response = self.supabase.table("events").select("id, name").eq("owner_id", owner_id).execute()
+        return response.data
+    
+    def get_event_by_id(self, event_id):
+        """
+        Find the event by it's associated ID
+        """
+        response = self.supabase.table("events").select('*').eq("id", event_id).execute()
+        if not response.data:
+            return None  # no event found
 
+        row = response.data[0]  # extract the first (and only) row
+
+        event = Event(
+            event_id=row["id"],
+            name=row["name"],
+            description=row.get("description"),
+            club_id=row["club_id"],
+            date=row["date"],
+            time=row["time"]
+        )
+
+        return event
+
+    def update_event(self, event_id: int, update_form: dict):
+        """
+
+        """
+        current_event = self.get_event_by_id(event_id)
+        if not current_event:
+            return None
+
+        update_values = {}
+
+        for key, value in update_form.items():
+            if value is not None and value != "" and getattr(current_event, key, None) != value:
+                update_values[key] = value
+
+        if len(update_values) == 0:
+            return None
+
+        response = self.supabase.table("events").update(update_values).eq("id", event_id).execute()
+
+        if response.data:
+            return response.data[0]
+
+        return None
+    
+    def delete_event(self, event_id: int):
+        try:
+            response = self.supabase.table("events").delete().eq("id", event_id).execute()
+
+            if response.data and len(response.data) > 0:
+                return True
+            return False
+        except Exception as e:
+            print(f"Error deleting event: {e}")
+            return False
