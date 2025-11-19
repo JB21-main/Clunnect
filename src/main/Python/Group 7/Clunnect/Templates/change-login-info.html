@@ -143,35 +143,27 @@
 <div class="content">
 <div class="card">
   <h2>Change Login Information</h2>
-
   <label>New Username</label>
   <input id="username" type="text">
-
   <label>New Password</label>
   <input id="password" type="password">
-
   <button onclick="submitChange()">Save Changes</button>
-
   <div id="message" class="msg"></div>
 </div>
-
 <script>
 async function submitChange() {
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
-
   const res = await fetch("/api/update-account", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password })
   });
-
   const data = await res.json();
   const msg = document.getElementById('message');
   msg.textContent = data.message;
   msg.style.color = data.success ? "green" : "red";
 }
 </script>
-
 </body>
 </html>

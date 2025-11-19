@@ -162,5 +162,23 @@
     </div>
   </section>
 </div>
+<script>
+const input = document.querySelector(".search-input");
+const button = document.querySelector(".search-glass");
+
+button.addEventListener("click", () => {
+  const text = input.value.trim();
+  if (!text) return;
+  window.location.href = `/search?query=${encodeURIComponent(text)}`;
+});
+
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    const text = input.value.trim();
+    if (!text) return;
+    window.location.href = `/search?query=${encodeURIComponent(text)}`;
+  }
+});
+</script>
 </body>
 </html>

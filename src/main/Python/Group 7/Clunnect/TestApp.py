@@ -155,6 +155,10 @@ def edit_club():
 
 @app.route('/join_club', methods=['GET', 'POST'])
 def join_club():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+
     clubs = dbmgr.get_club_list()
     return render_template('join-club.html', clubs=clubs)
 
@@ -174,6 +178,13 @@ def join_club_post(club_id):
     except Exception as e:
         return f"Error joining club: {str(e)}", 400
     
+@app.route('/search')
+def search_page():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+    return render_template('search.html')
+
 @app.route('/api/search', methods=['GET'])
 def handle_search():
     if 'user' not in session:
