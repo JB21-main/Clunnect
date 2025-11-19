@@ -150,23 +150,25 @@
       <input type="text" name="name" /> <!-- Club Name -->
       <label style="margin-top:12px;">Club Description</label>
       <textarea name="description" rows="5"></textarea>
-    
+      <label for="category">Category</label>
+      <input type="text" id="category" name="category" required>
     </div>
     <div class="card">
-      <div class="center" style="font-weight:700;margin-bottom:8px;">Club Meeting<br/>Times</div>
-      <table style="width:100%;border-collapse:collapse;">
-        <tbody>
-          <tr><td>Monday:</td><td>to:</td></tr>
-          <tr><td>Tuesday:</td><td>to:</td></tr>
-          <tr><td>Wednesday:</td><td>to:</td></tr>
-          <tr><td>Thursday:</td><td>to:</td></tr>
-          <tr><td>Friday:</td><td>to:</td></tr>
-          <tr><td>Saturday:</td><td>to:</td></tr>
-          <tr><td>Sunday:</td><td>to:</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <div class="center" style="font-weight:700;margin-bottom:8px;">Club Meeting<br/>Time</div>
+    <label for="meeting_day">Meeting Day</label>
+    <select id="meeting_day" name="meeting_day" required>
+      <option value="">Select a day</option>
+      <option>Monday</option>
+      <option>Tuesday</option>
+      <option>Wednesday</option>
+      <option>Thursday</option>
+      <option>Friday</option>
+      <option>Saturday</option>
+      <option>Sunday</option>
+    </select>
+  <label for="meeting_time" style="margin-top:12px;">Meeting Time</label>
+  <input type="time" id="meeting_time" name="meeting_time" required>
+</div>
   <div class="wide-cta"><button type="submit" class="cta big-cta">Create Club</button></div>
 
     </div>

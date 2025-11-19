@@ -29,14 +29,15 @@ class DBmgr:
         response = self.supabase.table("clubs").select("id").eq("name", club_name).execute()
         return len(response.data) == 0
 
-    def save_club(self, name: str, description: str, owner_id: int, category: str | None = None,
+    def save_club(self, name: str, description: str, owner_id: int, category: str | None = None, meeting_day: str | None = None,
     meeting_time: str | None = None):
         club_data = {
             'name': name,
             'description': description,
             'owner_id': owner_id,
             'category': category,
-            'meeting_time': meeting_time,
+            'meeting_day' : meeting_day,
+            'meeting_time': meeting_time
     }
 
         response = self.supabase.table("clubs").insert(club_data).execute()
@@ -103,20 +104,31 @@ class DBmgr:
             return response.data[0]
         return None
 
-    def update_club(self, club_id: int, name: str = None, description: str = None):
+    def update_club(self, club_id: int, name: str = None, description: str = None, category: str = None, date: str = None, time: str = None):
         """
         Partial update. Pass only the fields you want to change.
         """
+
         updates = {}
         if name is not None:
             updates["name"] = name
         if description is not None:
             updates["description"] = description
+        if category is not None:
+            updates["category"] = category
+        if date is not None:
+            updates["meeting_day"] = date
+        if time is not None:
+            updates["meeting_time"] = time
 
         if not updates:
             return True  # nothing to do
 
         response = self.supabase.table("clubs").update(updates).eq("id", club_id).execute()
+        print("UPDATES:", updates)
+        print("CLUB ID:", club_id)
+        print("SUPABASE RESPONSE:", response)
+
         if getattr(response, "error", None):
             raise Exception(response.error.message)
         return True

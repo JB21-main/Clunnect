@@ -88,9 +88,12 @@ def create_club():
     if request.method == 'POST':
         name = request.form.get('name')
         description = request.form.get('description')
+        category = request.form.get('category')
+        meeting_day = request.form.get("meeting_day")
+        meeting_time = request.form.get("meeting_time")
         owner_id = session['user']['id']
 
-        success, message = club_controller.create_club(name, description, owner_id)
+        success, message = club_controller.create_club(name, description, category, meeting_day, meeting_time,owner_id)
         flash(message, "success" if success else "danger")
         
         if success:
@@ -99,6 +102,54 @@ def create_club():
             return redirect(url_for('create_club'))
         
     return render_template('create-club.html')
+
+@app.route('/edit_club', methods=['GET', 'POST'])
+def edit_club():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+    
+    owner_id = session['user']['id']
+    clubs = dbmgr.find_club_by_owner(owner_id)
+
+    if request.method == 'POST':
+        delete_flag = request.form.get('delete_club') == '1'
+        club_id = int(request.form.get('club_id'))
+        if delete_flag:
+            club_controller.delete_club(club_id, owner_id)
+            flash("Club deleted successfully", "success")
+            return redirect(url_for('dashboard'))
+
+        name = request.form.get('name')
+        category = request.form.get('category')
+        description = request.form.get('description')
+        date = request.form.get('meeting_day')
+        time =  request.form.get('meeting_time')
+        
+        club_id = int(request.form.get('club_id'))
+
+        if not club_id:
+            flash("Please select a event", "danger")
+            return redirect(url_for(edit_event))
+
+        club_dict = {
+            "name": name,
+            "description": description,
+            "category": category,
+            "date": date,
+            "time": time
+        }
+
+        success, result = club_controller.edit_club(club_id, name, description, category, date, time, owner_id)
+        
+        if success:
+            flash("Event created successfully!", "success")
+            return redirect(url_for('dashboard'))
+        else:
+            flash(result, "danger")
+            return redirect(url_for('edit_club'))
+
+    return render_template('edit-club.html', user=session['user'], clubs=clubs)
 
 @app.route('/join_club', methods=['GET', 'POST'])
 def join_club():
@@ -215,7 +266,6 @@ def edit_event():
             return redirect(url_for('event_dashboard_user'))
 
         name = request.form.get('name')
-        date = request.form.get('time')
         category = request.form.get('category')
         description = request.form.get('description')
         date = request.form.get('date')

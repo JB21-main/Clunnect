@@ -3,7 +3,7 @@ from datetime import datetime
 
 class Club:
     def __init__(self, club_id: int, name: str, description: str, owner_id: int,
-        category: str | None = None, meeting_time: str | None = None):
+        category: str | None = None, meeting_day: str | None = None, meeting_time: str | None = None):
 
         self.club_id = club_id
         self.name = name
@@ -12,6 +12,7 @@ class Club:
 
         # new fields
         self.category = category or ""
+        self.meeting_day = meeting_day or ""
         self.meeting_time = meeting_time or ""
 
         self.members: List[int] = []  # stores user_ids
