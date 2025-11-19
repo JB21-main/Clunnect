@@ -305,5 +305,39 @@ def edit_event():
 
     return render_template("edit-event.html", user=session['user'], clubs = clubs)
 
+@app.route('/account_settings', methods=['GET','POST'])
+def account_settings():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+    
+    return render_template("account-settings.html", user=session['user'])
+
+@app.route('/change_login_info', methods=['GET','POST'])
+def change_login_info():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+    
+    return render_template("change-login-info.html", user=session['user'])
+
+#not added
+@app.route('/manage_preferences', methods=['GET','POST'])
+def manage_preferences():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+    
+    return render_template("account-settings.html", user=session['user'])
+
+#not functioning currently
+@app.route('/profile_page', methods=['GET','POST'])
+def profile_page():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+    
+    return render_template("profile.html", user=session['user'])
+
 if __name__ == "__main__":
     app.run(debug=True)

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Home – Clunnect</title>
+<title>Profile – Clunnect</title>
 <style>
   :root{
     --utd-green:#0e4a3f;
@@ -135,7 +135,7 @@
 <body>
 <div class="app">
   <section class="page">
-    <div class="topbar"><div class="brand">Clunnect</div><div class="title">Home</div><div class="hamburger">≡</div><a class="homeicon" title="Home" href="{{ url_for('homepage') }}" aria-label="Home">
+    <div class="topbar"><div class="brand">Clunnect</div><div class="title">Profile</div><a class="homeicon" title="Home" href="homepage.html" aria-label="Home">
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M3 10.5L12 3l9 7.5"></path>
     <path d="M5 9.5v11h5v-6h4v6h5v-11"></path>
@@ -143,20 +143,28 @@
 </a></div>
     <div class="content">
       
-  <div class="search-wrap">
-    <div class="searchbar">
-      <input class="search-input" type="text" />
-      <button class="search-glass" aria-label="Search">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-4-4"></path></svg>
-      </button>
-    </div>
+  <div class="profile-top">
+    <div class="avatar">Profile Picture</div>
+    <div style="margin-top:10px;font-weight:700;">First Last</div>
+    <div class="small">Major • Year</div>
   </div>
-  <div class="home-grid">
-    <a class="tile" href="{{ url_for('dashboard') }}"><div class="label">Clubs<br/>Dashboard</div></a>
-    <a class="tile" href="{{ url_for('event_dashboard_user') }}"><div class="label">Events<br/>Dashboard</div></a>
-    <a class="tile" href="notifications.html"><div class="label">Notifications</div></a>
-    <a class="tile" href="calendar.html"><div class="label">Calendar</div></a>
-    <a class="tile" href="{{ url_for('account_settings') }}"><div class="label">Account<br/>Settings</div></a>
+  <div style="max-width:900px;margin:20px auto;display:grid;grid-template-columns:1fr 1fr;gap:26px;">
+    <div>
+      <div style="color:var(--utd-orange);font-weight:700;margin-bottom:10px;">Interests</div>
+      <div class="chips">
+        <div class="chip"></div>
+        <div class="chip"></div>
+        <div class="chip"></div>
+      </div>
+    </div>
+    <div>
+      <div style="color:var(--utd-orange);font-weight:700;margin-bottom:10px;">Active Clubs</div>
+      <div class="chips">
+        <div class="chip"></div>
+        <div class="chip"></div>
+        <div class="chip"></div>
+      </div>
+    </div>
   </div>
 
     </div>

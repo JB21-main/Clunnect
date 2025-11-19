@@ -89,7 +89,20 @@ class DBmgr:
         return None
     
     def change_account_info(self, user_id: int, new_data: dict):
-        #not yet implemented
+        if not new_data:
+            return False
+        
+        try:
+            response = self.supabase.table("users").update(new_data).eq("id", user_id).execute()
+
+            if not response.data:
+                print("Supabase returned no updated rows")
+                return False
+            
+            return True
+        except Exception as e:
+            print(f"Error in DBmgr:change_account_info: [e]")
+            return False
         return None
 
     def get_club(self, club_id: int):
