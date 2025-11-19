@@ -3,10 +3,15 @@ from Services.DBmgr import DBmgr
 
 class JoinClubController:
   
-    def __init__(self, dbmgr: DBmgr):
+    def __init__(self, dbmgr):
         self.db = dbmgr
 
-    def join_club(self, userID: int, club: Club) -> str:
+    def join_club(self, userID: int, club_id: int) -> str:
+
+        club_dict = self.db.get_club(club_id)
+
+        club = Club.from_dict(club_dict)
+        
         # basic validation
         if not isinstance(userID, int) or userID <= 0:
             return "Invalid user"

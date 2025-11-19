@@ -32,3 +32,15 @@ class Club:
     def accept_request(self, user_id:int):
         if user_id not in self.members:
             self.members.append(user_id)
+
+    @staticmethod
+    def from_dict(data: dict) -> "Club":
+        return Club(
+            club_id=data.get("id"),
+            name=data.get("name"),
+            description=data.get("description"),
+            owner_id=data.get("owner_id"),
+            category=data.get("category"),
+            meeting_day=data.get("meeting_day"),
+            meeting_time=data.get("meeting_time")
+        )

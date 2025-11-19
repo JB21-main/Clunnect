@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from Controllers.AuthController import AuthController
 from Controllers.ClubController import ClubController
 from Controllers.EventController import EventController
+from Controllers.JoinClubController import JoinClubController
 from Controllers.SearchController import SearchController       
 from Controllers.AccountController import AccountController
 from Services.DBmgr import DBmgr
@@ -20,6 +21,7 @@ dbmgr = DBmgr()
 auth_controller = AuthController(dbmgr)
 club_controller = ClubController(dbmgr)
 event_controller = EventController(dbmgr)
+join_club_controller = JoinClubController(dbmgr)
 search_controller = SearchController(dbmgr=dbmgr)    
 account_controller = AccountController(dbmgr=dbmgr) 
 print("after")
@@ -160,8 +162,15 @@ def join_club():
 def join_club_post(club_id):
     user_id = session['user']['id']
     try:
-        dbmgr.add_user_to_clubs(user_id,club_id)
-        return redirect(url_for('dashboard'))
+        result = join_club_controller.join_club(user_id,club_id)
+        
+    
+        if result != "Joined successfully":
+            flash(result, "warning")
+            return redirect(url_for('join_club'))
+        else:
+            flash("You joined the club!", "success")
+            return redirect(url_for('join_club'))
     except Exception as e:
         return f"Error joining club: {str(e)}", 400
     
