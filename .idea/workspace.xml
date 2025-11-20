@@ -53,6 +53,18 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration default="true" type="GroovyScriptRunConfiguration" factoryName="Groovy">
+      <setting name="path" value="" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workDir" value="file://$PROJECT_DIR$" />
+      <setting name="debug" value="false" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -94,6 +106,7 @@
       <workItem from="1763645212869" duration="75000" />
       <workItem from="1763645290088" duration="208000" />
       <workItem from="1763645500274" duration="1328000" />
+      <workItem from="1763646835285" duration="232000" />
     </task>
     <servers />
   </component>

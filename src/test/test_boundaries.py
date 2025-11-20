@@ -2,7 +2,7 @@ import os
 import sys
 import pytest
 
-# --- Make sure we can import club_system.py from src/main ---
+# --- Make sure from import club_system.py from src/main ---
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))      # .../mangage_clubs/src
 MAIN_DIR = os.path.join(BASE_DIR, "main")                  # .../mangage_clubs/src/main
 
