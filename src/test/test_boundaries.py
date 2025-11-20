@@ -2,7 +2,7 @@ import pytest
 import os
 import sys
 
-# --- Make sure we can import from src/main ---
+# --- Make sure import from src/main ---
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))      # .../mangage_clubs/src
 MAIN_DIR = os.path.join(BASE_DIR, "main")                  # .../mangage_clubs/src/main
 
