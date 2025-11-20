@@ -1,5 +1,6 @@
 import pytest
-from search_system import SearchController
+from Services.DBmgr import DBmgr
+from Controllers.SearchController import SearchController
 
 @pytest.fixture
 def system():

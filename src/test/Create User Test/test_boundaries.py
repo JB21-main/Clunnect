@@ -13,7 +13,7 @@ def system():
 def test_name_boundary_whitespace_only(system):
     """ Tests a club name that consists only of spaces. """
     club_name = "   "
-    description = "a" * 50  # Valid description
+    description = "a" * 50
     expected = "Club Name cannot be empty"
     
     assert system.create_club(club_name, description) == expected

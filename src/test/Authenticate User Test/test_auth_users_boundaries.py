@@ -1,9 +1,11 @@
 import pytest
-from AuthController import AuthController
+from Services.DBmgr import DBmgr
+from Controllers.AuthController import AuthController
 
 @pytest.fixture
 def controller():
-    auth_controller = AuthController()
+    db_mgr = DBmgr()
+    auth_controller = AuthController(db_mgr)
     return auth_controller
 
 # Successful authorization
