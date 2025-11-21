@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Clunnect Search – Clunnect</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Club</title>
+
 <style>
   :root{
     --utd-green:#0e4a3f;
@@ -132,77 +133,65 @@
   .small{font-size:12px;color:#777;}
 </style>
 </head>
+
 <body>
 <div class="app">
-  <section class="page">
-    <div class="topbar"><div class="brand">Clunnect</div><div class="title">Clunnect Search</div><a class="homeicon" title="Home" href="{{url_for('homepage')}}" aria-label="Home">
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M3 10.5L12 3l9 7.5"></path>
-    <path d="M5 9.5v11h5v-6h4v6h5v-11"></path>
-  </svg>
-</a></div>
-    <div class="content">
-      
-  <div class="search-wrap">
-    <div class="searchbar">
-      <input class="search-input" type="text" />
-      <button class="search-glass" aria-label="Search">
-        
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-4-4"></path></svg>
-      </button>
-    </div>
-  </div>
-  <div id="results" style="max-width:760px;margin:20px auto;"></div>
-  <div class="small" style="max-width:760px;margin:6px auto 0;">
-    <span>Advanced Search</span> &nbsp; | &nbsp; <span>Browse Club Catalog</span>
+  <div class="topbar">
+    <div class="brand">Clunnect</div>
+    <div class="title">Club Details</div>
+    <a class="homeicon" href="{{url_for('homepage')}}" style="position:absolute; right:16px; color:#fff;">Home</a>
   </div>
 
-    </div>
-  </section>
+  <div class="content">
+    <div id="club-container"></div>
+  </div>
 </div>
+
 <script>
-const input = document.querySelector(".search-input");
-const button = document.querySelector(".search-glass");
-const resultsDiv = document.getElementById("results");
+const clubId = window.location.pathname.split("/").pop();
+const container = document.getElementById("club-container");
 
-button.addEventListener("click", runSearch);
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") runSearch();
-});
+fetch(`/api/club/${clubId}`)
+  .then(r => r.json())
+  .then(data => renderClub(data))
+  .catch(err => container.innerHTML = `<p style="color:red;">Error: ${err}</p>`);
 
-const params = new URLSearchParams(window.location.search);
-if (params.has("query")) {
-  input.value = params.get("query");
-  runSearch();
-}
+function renderClub(club) {
+  container.innerHTML = `
+    <div class="card">
+      <h1 class="headline">${club.name}</h1>
+      <p class="sub">${club.description || "No description available."}</p>
+    </div>
 
-function runSearch() {
-  const query = input.value.trim();
-  if (!query) {
-    resultsDiv.innerHTML = "<p>No search query entered.</p>";
-    return;
-  }
+    <div class="card">
+      <h2>Meeting Information</h2>
+      <p><strong>Day:</strong> ${club.meeting_day || "N/A"}</p>
+      <p><strong>Time:</strong> ${club.meeting_time || "N/A"}</p>
+    </div>
 
-  fetch(`/api/search?query=${encodeURIComponent(query)}`)
-    .then(res => res.json())
-    .then(data => {
-      if (!Array.isArray(data) || data.length === 0) {
-        resultsDiv.innerHTML = "<p>No clubs found.</p>";
-        return;
+    <div class="card">
+      <h2>Officers</h2>
+      ${club.officers?.length
+        ? club.officers.map(o => `<p>${o.role}: <strong>${o.name}</strong></p>`).join("")
+        : "<p>No officers listed.</p>"
       }
+    </div>
 
-      resultsDiv.innerHTML = data.map(club => `
-        <div style="padding:12px;border:1px solid #ccc;margin-bottom:10px;border-radius:6px;">
-          <h3 style="margin:0;color:var(--utd-green);">${club.name}</h3>
-          <p style="margin:4px 0 0;">${club.description || "No description available."}</p>
-          <a href="/club_page/${club.id}" style="color:var(--utd-orange);text-decoration:underline;">View Club</a>
-        </div>
-      `).join("");
-    })
-    .catch(err => {
-      resultsDiv.innerHTML = `<p style="color:red;">Error: ${err}</p>`;
-    });
+    <div class="card">
+      <h2>Events</h2>
+      ${club.events?.length
+        ? club.events.map(e => `
+            <p>
+              <strong>${e.title}</strong><br>
+              ${e.date} at ${e.time}
+            </p>`
+          ).join("")
+        : "<p>No upcoming events.</p>"
+      }
+    </div>
+  `;
 }
 </script>
+
 </body>
 </html>

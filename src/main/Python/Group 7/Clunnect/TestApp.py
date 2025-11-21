@@ -1,4 +1,6 @@
 from dotenv import load_dotenv
+from datetime import datetime, date
+import calendar
 load_dotenv()
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
@@ -7,8 +9,11 @@ from Controllers.ClubController import ClubController
 from Controllers.EventController import EventController
 from Controllers.JoinClubController import JoinClubController
 from Controllers.SearchController import SearchController       
+from Controllers.CalendarController import CalendarController
 from Controllers.AccountController import AccountController
+from Controllers.FacultyController import FacultyController
 from Services.DBmgr import DBmgr
+from Data.Level import Level
 from Services.UserCreator import UserCreator
 
 print("Loaded app module from:", __name__)
@@ -23,7 +28,9 @@ club_controller = ClubController(dbmgr)
 event_controller = EventController(dbmgr)
 join_club_controller = JoinClubController(dbmgr)
 search_controller = SearchController(dbmgr=dbmgr)    
-account_controller = AccountController(dbmgr=dbmgr) 
+account_controller = AccountController(dbmgr=dbmgr)
+calendar_controller = CalendarController(dbmgr=dbmgr)
+faculty_controller = FacultyController(dbmgr=dbmgr)  
 print("after")
 
 @app.route("/")
@@ -212,6 +219,17 @@ def handle_account_update():
     )
     return jsonify({"success": success, "message": message})
 
+@app.route("/club/<int:club_id>")
+def club_page(club_id):
+    if 'user' not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    return render_template("club_page.html")
+
+"""@app.route('/api/club_page/<int:club_id>', methods=['POST'])
+def club_page(club_id):
+    return """
+
 @app.route('/create_event', methods=['GET','POST'])
 def create_event():
     if 'user' not in session:
@@ -349,6 +367,93 @@ def profile_page():
         return redirect(url_for('login'))
     
     return render_template("profile.html", user=session['user'])
+
+@app.route('/faculty_settings', methods=['GET', 'POST'])
+def faculty_settings():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+
+    if session['user']['level'] != "faculty":
+        flash("You do not have permission to access this page.", "danger")
+        return redirect(url_for('homepage'))
+
+    # types username
+    if request.method == 'POST':
+        username = request.form.get('username')
+
+        # Look up user by username
+        result = dbmgr.supabase.table("users") \
+            .select("*") \
+            .eq("username", username) \
+            .execute()
+
+        if not result.data:
+            flash("No user found with that username.", "danger")
+            return redirect(url_for('faculty_settings'))
+
+        user_id = result.data[0]["id"]
+
+        # Set permission level to faculty
+        success, out = faculty_controller.set_user_permission(
+            int(user_id),
+            Level.FACULTY
+        )
+
+        if success:
+            flash(f"{username} is now a faculty user", "success")
+        else:
+            flash(out, "danger")
+
+        return redirect(url_for('faculty_settings'))
+
+    return render_template('faculty-settings.html')
+
+#calendar
+@app.route('/calendar', endpoint='calendar')
+def calendar_page():
+    if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+
+    user_id = session['user']['id']
+
+    month = request.args.get("month", type=int) or datetime.now().month
+    year = request.args.get("year", type=int) or datetime.now().year
+
+    # load user events
+    success, events = calendar_controller.load_calendar_view(user_id)
+
+    # calendar grid for each month
+    cal = calendar.Calendar()
+    month_days = cal.itermonthdays(year, month)
+
+    calendar_cells = []
+    for d in month_days:
+        if d == 0:
+            calendar_cells.append({"empty": True})
+        else:
+            # checks if day has event
+            has_event = any(
+                e["date"] == f"{year}-{month:02d}-{d:02d}"
+                for e in events
+            )
+            calendar_cells.append({
+                "empty": False,
+                "day": d,
+                "has_event": has_event
+            })
+
+    month_name = calendar.month_name[month]
+
+    return render_template(
+        "calendar.html",
+        month=month,
+        year=year,
+        month_name=month_name,
+        calendar=calendar_cells,
+        events=events
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)

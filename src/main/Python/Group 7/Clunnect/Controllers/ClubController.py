@@ -33,6 +33,8 @@ class ClubController:
             if row and "id" in row:
                 club.club_id = row["id"]
 
+                self.db.add_user_to_clubs(owner_id, club.club_id)
+
             return True, "Club created successfully."
         except Exception as e:
             return False, f"Error creating club: {str(e)}"

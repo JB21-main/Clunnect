@@ -142,7 +142,15 @@
   </svg>
 </a></div>
     <div class="content">
-      
+      {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+             {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
   <div class="search-wrap">
     <div class="searchbar">
       <input class="search-input" type="text" />
@@ -155,7 +163,7 @@
     <a class="tile" href="{{ url_for('dashboard') }}"><div class="label">Clubs<br/>Dashboard</div></a>
     <a class="tile" href="{{ url_for('event_dashboard_user') }}"><div class="label">Events<br/>Dashboard</div></a>
     <a class="tile" href="notifications.html"><div class="label">Notifications</div></a>
-    <a class="tile" href="calendar.html"><div class="label">Calendar</div></a>
+    <a class="tile" href='{{ url_for("calendar")}}'><div class="label">Calendar</div></a>
     <a class="tile" href="{{ url_for('account_settings') }}"><div class="label">Account<br/>Settings</div></a>
   </div>
 
