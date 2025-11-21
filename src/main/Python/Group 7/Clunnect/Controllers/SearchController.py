@@ -1,6 +1,6 @@
 from typing import List
 from Services.DBmgr import DBmgr
-from Data.Club import Club  
+from Data.Club import Club
 
 class SearchController:
     
@@ -8,13 +8,31 @@ class SearchController:
         self.db = dbmgr
 
     def search(self, query: str) -> List:
-        if not query or not query.strip():
-            print("SearchController: Received empty query.")
+        # Case 1: Handle None or non-string input 
+        if query is None or not isinstance(query, str):
+            print("SearchController: Invalid input type received.")
+            return []
+
+        # Case 2: Clean the input (remove leading/trailing spaces)
+        clean_query = query.strip()
+
+        # Case 3: Handle empty strings after cleaning 
+        if not clean_query:
+            print("SearchController: Query was empty or just whitespace.")
             return []
 
         try:
-            results = self.db.find_club_by_name(query)
+            # Case 4: Valid input - Attempt the database search
+            results = self.db.find_club_by_name(clean_query)
+            
+            # Case 5: Handle if DB returns None instead of an empty list
+            if results is None:
+                return []
+
+            # Case 6: Results found (or empty list if typo/no match)
             return results
+
         except Exception as e:
-            print(f"Error during search operation for query '{query}': {e}")
+            # Case 7: Database connection error or unexpected failure
+            print(f"Error during search operation for query '{clean_query}': {e}")
             return []
