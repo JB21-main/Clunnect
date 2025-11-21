@@ -136,11 +136,13 @@
 
 <body>
 <div class="app">
-  <div class="topbar">
-    <div class="brand">Clunnect</div>
-    <div class="title">Club Details</div>
-    <a class="homeicon" href="{{url_for('homepage')}}" style="position:absolute; right:16px; color:#fff;">Home</a>
-  </div>
+  <section class="page">
+    <div class="topbar"><div class="brand">Clunnect</div><div class="title">Club</div><a class="homeicon" title="Home" href="{{url_for('homepage')}}" aria-label="Home">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M3 10.5L12 3l9 7.5"></path>
+    <path d="M5 9.5v11h5v-6h4v6h5v-11"></path>
+  </svg>
+</a></div>
 
   <div class="content">
     <div id="club-container"></div>
@@ -163,26 +165,26 @@ function renderClub(club) {
       <p class="sub">${club.description || "No description available."}</p>
     </div>
 
+    <div style="margin-top:20px; margin-bottom:20px;">
+      <form method="POST" action="/join_club/${club.id}">
+       <button type="submit" class="cta">Join Club</button>
+     </form>
+    </div>
+
     <div class="card">
       <h2>Meeting Information</h2>
       <p><strong>Day:</strong> ${club.meeting_day || "N/A"}</p>
       <p><strong>Time:</strong> ${club.meeting_time || "N/A"}</p>
     </div>
 
-    <div class="card">
-      <h2>Officers</h2>
-      ${club.officers?.length
-        ? club.officers.map(o => `<p>${o.role}: <strong>${o.name}</strong></p>`).join("")
-        : "<p>No officers listed.</p>"
-      }
-    </div>
+    
 
-    <div class="card">
+    <div class="card" >
       <h2>Events</h2>
       ${club.events?.length
         ? club.events.map(e => `
             <p>
-              <strong>${e.title}</strong><br>
+              <strong>${e.name}</strong><br>
               ${e.date} at ${e.time}
             </p>`
           ).join("")

@@ -205,7 +205,17 @@ class DBmgr:
         )
 
         return event
-
+    
+    def get_event_by_club(self, club_id):
+        """
+        Find all events associated with a club
+        """
+        response = self.supabase.table("events").select("*").eq("club_id", club_id).execute()
+        if not response.data:
+            return None 
+        
+        return response.data
+        
     def update_event(self, event_id: int, update_form: dict):
         """
 

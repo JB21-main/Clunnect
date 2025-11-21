@@ -195,7 +195,7 @@ function runSearch() {
         <div style="padding:12px;border:1px solid #ccc;margin-bottom:10px;border-radius:6px;">
           <h3 style="margin:0;color:var(--utd-green);">${club.name}</h3>
           <p style="margin:4px 0 0;">${club.description || "No description available."}</p>
-          <a href="/club_page/${club.id}" style="color:var(--utd-orange);text-decoration:underline;">View Club</a>
+          <a href="/club/${club.id}" style="color:var(--utd-orange);text-decoration:underline;">View Club</a>
         </div>
       `).join("");
     })

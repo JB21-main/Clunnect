@@ -222,13 +222,29 @@ def handle_account_update():
 @app.route("/club/<int:club_id>")
 def club_page(club_id):
     if 'user' not in session:
+        flash("Please log in first.", "danger")
+        return redirect(url_for('login'))
+
+    return render_template("club_page.html", club_id=club_id)
+
+@app.route("/api/club/<int:club_id>")
+def api_club_page(club_id):
+    if 'user' not in session:
         return jsonify({"error": "Unauthorized"}), 401
 
-    return render_template("club_page.html")
+    club = dbmgr.get_club(club_id)
+    events = dbmgr.get_event_by_club(club_id)
+    if not club:
+        return jsonify({"error": "Club not found"}), 404
 
-"""@app.route('/api/club_page/<int:club_id>', methods=['POST'])
-def club_page(club_id):
-    return """
+    return jsonify({
+    "id": club["id"],
+    "name": club["name"],
+    "description": club["description"],
+    "meeting_day": club["meeting_day"],
+    "meeting_time": club["meeting_time"],
+    "events": events
+})
 
 @app.route('/create_event', methods=['GET','POST'])
 def create_event():
