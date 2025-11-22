@@ -9,27 +9,27 @@
 ## To Download and Run Clunnect
 
  1. In your Terminal clone the repository using:
-     """powershell
+     ```powershell
       git clone https://github.com/JB21-main/Clunnect.git
       cd clunnect
-      """
+      ```
 
  2. You will need to set up the enviorment:
-      """powershell
+      ```powershell
       python -m venv venv
       venv/Scripts/activate
-      """
+      ```
 
  3. Install Dependencies
-      """powershell
+      ```powershell
       pip install -r requirements.txt
-      """
+      ```
 
 
  5. Running the application
-      """powershell
+      ```powershell
       python TestApp.py
-      """
+      ```
     then on a browser go to http://127.0.0.1:5000/
 
 
