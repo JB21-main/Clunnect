@@ -1,12 +1,13 @@
 # test_join_club_boundaries.py
 import pytest
-from join_club import ClubSystem
-
+from Services.DBmgr import DBmgr
+from Controllers.JoinClubController import ClubController
 
 @pytest.fixture
 def system():
     """Initialize the ClubSystem for testing."""
-    sys = ClubSystem()
+    dbMgr = DBmgr()
+    sys = ClubController(dbMgr)
     return sys
 
 

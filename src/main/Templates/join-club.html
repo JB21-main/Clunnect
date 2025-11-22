@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join Club – Clunnect</title>
+  <style>
+  :root{
+    --utd-green:#0e4a3f;
+    --utd-orange:#FF8200;
+    --muted:#f3f3f3;
+    --border:#d0d0d0;
+    --text:#222;
+  }
+  *{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;}
+  body{margin:0;background:#ededed;display:flex;justify-content:center;}
+  .app{width:1200px;background:#fff;min-height:100vh;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+  .page{display:block;padding-bottom:40px;}
+  .topbar{
+    background:var(--utd-green);
+    color:#fff;
+    height:58px;
+    display:flex;
+    align-items:center;
+    padding:0 18px;
+    position:relative;
+  }
+  .brand{font-weight:700;font-size:22px;}
+  .title{position:absolute;left:0;right:0;text-align:center;color:var(--utd-orange);font-weight:700;letter-spacing:.3px;}
+  .topbar .homeicon{position:absolute;right:16px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .topbar .homeicon svg{width:24px;height:24px;stroke:#111;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .content{padding:34px 56px;}
+
+  /* search bar */
+  .search-wrap{max-width:760px;margin:8px auto 18px;}
+  .searchbar{position:relative;width:100%;}
+  .search-input{
+    width:100%;
+    height:42px;
+    border:1px solid #9a9a9a;
+    border-radius:11px;
+    background:#fff;
+    padding:0 48px 0 16px;
+    outline:none;
+    box-shadow:none;
+  }
+  .search-glass{
+    position:absolute;right:10px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border:none;background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .search-glass svg{width:20px;height:20px;stroke:#111;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+  /* club list */
+  .list{max-width:980px;margin:10px auto;border:1px solid #cfcfcf;border-radius:8px;overflow:hidden;background:#fff;}
+  .row{display:grid;grid-template-columns:1fr 120px;gap:16px;align-items:center;padding:14px 16px;border-bottom:1px solid #eaeaea;}
+  .row:last-child{border-bottom:none;}
+  .club-title{font-weight:700;color:#222;margin-bottom:6px;}
+  .club-meta{font-size:12px;color:#666;}
+  .cta{background:var(--utd-orange);border:none;color:#fff;border-radius:6px;height:36px;padding:0 16px;font-weight:700;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.25);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;}
+  .small{font-size:12px;color:#777;text-align:left;max-width:980px;margin:6px auto 0;}
+</style>
+</head>
+<body>
+  <div class="app">
+    <section class="page">
+      
+    <div class="topbar">
+      <div class="brand">Clunnect</div>
+      <div class="title">Join Club</div>
+      <a class="homeicon" title="Home" href="{{ url_for('homepage') }}" aria-label="Home">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 10.5L12 3l9 7.5"></path>
+          <path d="M5 9.5v11h5v-6h4v6h5v-11"></path>
+        </svg>
+      </a>
+    </div>
+      <div class="content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+             {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+        <div class="search-wrap">
+          <div class="searchbar">
+            <input class="search-input" type="text" />
+            <button class="search-glass" aria-label="Search">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="M20 20l-4-4"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="small">Advanced Search &nbsp; | &nbsp; Browse Club Catalog</div>
+
+        <div class="list" role="list">
+          <div class="row" role="listitem">
+            <div class="list" role="list">
+  {% for club in clubs %}
+    <div class="row" role="listitem">
+      <div>
+        <div class="club-title">{{ club.name }}</div>
+        <div class="club-meta">{{ club.category or "No category" }} • Meeting: {{ club.meeting_time or "TBD" }} • Location: {{ club.location or "TBD" }}</div>
+      </div>
+      <form method="POST" action="{{ url_for('join_club_post', club_id=club.id) }}">
+        <button class="cta" type="submit">Join</button>
+      </form>
+    </div>
+  {% else %}
+    <div class="row" role="listitem">
+      <div>No clubs available</div>
+    </div>
+  {% endfor %}
+</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+</body>
+</html>
