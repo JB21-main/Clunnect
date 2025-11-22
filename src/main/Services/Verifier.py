@@ -1,5 +1,4 @@
 from werkzeug.security import check_password_hash
-from werkzeug.security import generate_password_hash
 
 class Verifier:
     @staticmethod
@@ -12,7 +11,5 @@ class Verifier:
 
         Returns:
             bool: True if the passwords match
-
-        !! NOT USING WERKZEUG RIGHT NOW AS OF PRE PHASE 5
         """
-        return db_password == in_password
+        return check_password_hash(db_password, in_password)
