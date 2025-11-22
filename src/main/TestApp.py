@@ -174,7 +174,6 @@ def join_club_post(club_id):
     user_id = session['user']['id']
     try:
         result = join_club_controller.join_club(user_id,club_id)
-        
     
         if result != "Joined successfully":
             flash(result, "warning")
